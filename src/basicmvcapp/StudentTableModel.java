@@ -6,6 +6,7 @@
 package basicmvcapp;
 
 import java.util.ArrayList;
+import javax.swing.table.AbstractTableModel;
 
 /**
  *
@@ -21,7 +22,6 @@ public class StudentTableModel extends AbstractTableModel{
         studentList = newStudentList;
         
     }
-    
     
     @Override
     public String getColumnName(int col) {
@@ -49,8 +49,7 @@ public class StudentTableModel extends AbstractTableModel{
     
     @Override
     public void setValueAt(Object value, int row, int col) {
-        rowData[row][col] = value;
-        fireTableCellUpdated(row, col);
+        
     }
     
 }

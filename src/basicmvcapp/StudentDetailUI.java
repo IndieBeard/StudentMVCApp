@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class StudentUI extends JFrame {
+public class StudentDetailUI extends JFrame {
 
     private int indexOfElementToDisplay;
     private boolean addNewButtonPressed;
@@ -20,13 +20,17 @@ public class StudentUI extends JFrame {
 
     private JPanel studentPanel;
     private JPanel buttonPanel;
+    
+    private Student currentStudent;
 
-    private final StudentCntl studentCntl;
+    private final StudentCntl parentStudentCntl;
 
-    public StudentUI(StudentCntl studentCntl, int startingIndexOfDisplay) {
-        this.studentCntl = studentCntl;
+    public StudentDetailUI(StudentCntl studentCntl, int startingIndexOfDisplay) {
+        parentStudentCntl = studentCntl;
         indexOfElementToDisplay = startingIndexOfDisplay;
+        currentStudent = parentStudentCntl.getStudent(startingIndexOfDisplay);
         initComponents();
+        parseCurrentStudent();
         setFieldView();
     }
 
@@ -73,15 +77,15 @@ public class StudentUI extends JFrame {
     }
 
     private void setFieldView() {
-        firstNameDisplayValue.setText(studentCntl.getStudent(indexOfElementToDisplay).getFirstName());
-        lastNameDisplayValue.setText(studentCntl.getStudent(indexOfElementToDisplay).getLastName());
-        gpaDisplayValue.setText(String.valueOf(studentCntl.getStudent(indexOfElementToDisplay).getGpa()));
+        firstNameDisplayValue.setText(parentStudentCntl.getStudent(indexOfElementToDisplay).getFirstName());
+        lastNameDisplayValue.setText(parentStudentCntl.getStudent(indexOfElementToDisplay).getLastName());
+        gpaDisplayValue.setText(String.valueOf(parentStudentCntl.getStudent(indexOfElementToDisplay).getGpa()));
     }
 
     private void showNextStudent(int currentIndex) {
         // modify currentIndex as needed; then refresh display with modified index
         currentIndex++;
-        if(currentIndex >= studentCntl.studentList.getStudentList().size()){
+        if(currentIndex >= parentStudentCntl.studentList.getStudentList().size()){
             currentIndex = 0;
         }
         
@@ -95,7 +99,7 @@ public class StudentUI extends JFrame {
         // modify currentIndex as needed; then refresh display with modified index
         currentIndex--;
         if(currentIndex < 0){
-            currentIndex = studentCntl.studentList.getStudentList().size() -1 ;
+            currentIndex = parentStudentCntl.studentList.getStudentList().size() -1 ;
         }
         
         indexOfElementToDisplay = currentIndex;
@@ -125,19 +129,19 @@ public class StudentUI extends JFrame {
         //If the add button was previously pressed...
         if(addNewButtonPressed == true){
             //Add the information to a new student and add it to the end of the list
-            studentCntl.studentList.getStudentList().add(new Student(firstName, lastName, gpa));
+            parentStudentCntl.studentList.getStudentList().add(new Student(firstName, lastName, gpa));
             addNewButtonPressed = false;
         }
         //Else, just edit the student on the current index.
         else{
-            studentCntl.studentList.getStudentList().remove(currentIndex);
-            studentCntl.studentList.getStudentList().add(new Student(firstName, lastName, gpa));
+            parentStudentCntl.studentList.getStudentList().remove(currentIndex);
+            parentStudentCntl.studentList.getStudentList().add(new Student(firstName, lastName, gpa));
         }
         
     }
     
     private void removeStudent(){
-        studentCntl.studentList.getStudentList().remove(indexOfElementToDisplay);
+        parentStudentCntl.studentList.getStudentList().remove(indexOfElementToDisplay);
     }
 
     void refreshDisplayWithNewValues(int index) {
@@ -145,5 +149,10 @@ public class StudentUI extends JFrame {
         setFieldView();
     }
     
+    public void parseCurrentStudent(){
+        firstNameDisplayValue.setText(currentStudent.getFirstName());
+        lastNameDisplayValue.setText(currentStudent.getFirstName());
+        gpaDisplayValue.setText(currentStudent.getFirstName());
+    }
     
 }
